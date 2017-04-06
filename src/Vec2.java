@@ -1,4 +1,3 @@
-
 public class Vec2 {
 	private int x;
 	private int y;
@@ -20,6 +19,11 @@ public class Vec2 {
 
 	public int getX() { return this.x; }
 	public int getY() { return this.y; }
+	
+	@Override
+	public String toString() {
+		return Character.toString((char)('a' + this.x)) + Integer.toString(8 - this.y);
+	}
 	
 	@Override
 	public int hashCode() {
@@ -45,7 +49,4 @@ public class Vec2 {
 			return false;
 		return true;
 	}
-	
-	
-	
 }
