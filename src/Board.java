@@ -2,9 +2,7 @@ import java.util.*;
 
 public class Board {
 
-	private static enum Color {
-		WHITE, BLACK, EMPTY
-	};
+	private static enum Color {WHITE, BLACK, EMPTY};
 
 	private static final char[][] start = new char[][] {
 		{'♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'},
@@ -18,12 +16,14 @@ public class Board {
 	};
 
 	char[][] board = new char[8][8];
+	char[][] prev = new char[8][8];
 	List<String> history = new ArrayList<>();
 
 	public Board() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = start[i][j];
+				prev[i][j] = board[i][j];
 			}
 		}
 	}
@@ -32,6 +32,7 @@ public class Board {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = init.board[i][j];
+				prev[i][j] = board[i][j];
 			}
 		}
 		history = new ArrayList<>(init.history);
@@ -54,40 +55,36 @@ public class Board {
 		Color col = getColor(x, y);
 		moves.add(new Vec2(x, y));
 		switch (board[y][x]) {
+		case '♛':
+		case '♕':
 		case '♜':
 		case '♖':
 			for (int i = 1; y + i < 8; i++) {
-				if (getColor(x, y + i) != col)
-					moves.add(new Vec2(x, y + i));
-				if (getColor(x, y + i) != Color.EMPTY)
+				Vec2 p = new Vec2(x, y + i);
+				if (getColor(p) != col)
+					moves.add(p);
+				if (getColor(p) != Color.EMPTY)
 					break;
 			} for (int i = -1; y + i >= 0; i--) {
-				if (getColor(x, y + i) != col)
-					moves.add(new Vec2(x, y + i));
-				if (getColor(x, y + i) != Color.EMPTY)
+				Vec2 p = new Vec2(x, y + i);
+				if (getColor(p) != col)
+					moves.add(p);
+				if (getColor(p) != Color.EMPTY)
 					break;
 			} for (int i = 1; x + i < 8; i++) {
-				if (getColor(x + i, y) != col)
-					moves.add(new Vec2(x + i, y));
-				if (getColor(x + i, y) != Color.EMPTY)
+				Vec2 p = new Vec2(x + i, y);
+				if (getColor(p) != col)
+					moves.add(p);
+				if (getColor(p) != Color.EMPTY)
 					break;
 			} for (int i = -1; x + i >= 0; i--) {
-				if (getColor(x + i, y) != col)
-					moves.add(new Vec2(x + i, y));
-				if (getColor(x + i, y) != Color.EMPTY)
+				Vec2 p = new Vec2(x + i, y);
+				if (getColor(p) != col)
+					moves.add(p);
+				if (getColor(p) != Color.EMPTY)
 					break;
 			}
-			break;
-		case '♞':
-		case '♘':
-			for (int[] move : new int[][]{{1, -2}, {2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}}) {
-				int nx = x + move[0];
-				int ny = y + move[1];
-				if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && getColor(nx, ny) != col) {
-					moves.add(new Vec2(nx, ny));
-				}
-			}
-			break;
+			if (board[y][x] == '♜' || board[y][x] == '♖') break;
 		case '♝':
 		case '♗':
 			for (int i = 1; x + i < 8 && y + i < 8; i++) {
@@ -116,52 +113,14 @@ public class Board {
 					break;
 			}
 			break;
-		case '♛':
-		case '♕':
-			for (int i = 1; y + i < 8; i++) {
-				if (getColor(x, y + i) != col)
-					moves.add(new Vec2(x, y + i));
-				if (getColor(x, y + i) != Color.EMPTY)
-					break;
-			} for (int i = -1; y + i >= 0; i--) {
-				if (getColor(x, y + i) != col)
-					moves.add(new Vec2(x, y + i));
-				if (getColor(x, y + i) != Color.EMPTY)
-					break;
-			} for (int i = 1; x + i < 8; i++) {
-				if (getColor(x + i, y) != col)
-					moves.add(new Vec2(x + i, y));
-				if (getColor(x + i, y) != Color.EMPTY)
-					break;
-			} for (int i = -1; x + i >= 0; i--) {
-				if (getColor(x + i, y) != col)
-					moves.add(new Vec2(x + i, y));
-				if (getColor(x + i, y) != Color.EMPTY)
-					break;
-			} for (int i = 1; x + i < 8 && y + i < 8; i++) {
-				Vec2 p = new Vec2(x + i, y + i);
-				if (getColor(p) != col)
-					moves.add(p);
-				if (getColor(p) != Color.EMPTY)
-					break;
-			} for (int i = 1; x - i >= 0 && y + i < 8; i++) {
-				Vec2 p = new Vec2(x - i, y + i);
-				if (getColor(p) != col)
-					moves.add(p);
-				if (getColor(p) != Color.EMPTY)
-					break;
-			} for (int i = 1; x - i >= 0 && y - i >= 0; i++) {
-				Vec2 p = new Vec2(x - i, y - i);
-				if (getColor(p) != col)
-					moves.add(p);
-				if (getColor(p) != Color.EMPTY)
-					break;
-			} for (int i = 1; x + i < 8 && y - i >= 0; i++) {
-				Vec2 p = new Vec2(x + i, y - i);
-				if (getColor(p) != col)
-					moves.add(p);
-				if (getColor(p) != Color.EMPTY)
-					break;
+		case '♞':
+		case '♘':
+			for (int[] move : new int[][]{{1, -2}, {2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}}) {
+				int nx = x + move[0];
+				int ny = y + move[1];
+				if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && getColor(nx, ny) != col) {
+					moves.add(new Vec2(nx, ny));
+				}
 			}
 			break;
 		case '♚':
@@ -204,5 +163,6 @@ public class Board {
 	public void move(Vec2 from, Vec2 to) {
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
+		history.add(from + " to " + to);
 	}
 }

@@ -51,8 +51,22 @@ public class Chess implements ActionListener {
 		menubar.add(menu);
 		frame.setJMenuBar(menubar);
 
+		JPanel letters = new JPanel(new GridLayout(1, 8));
+		JPanel numbers = new JPanel(new GridLayout(8, 1));
+		
+		for (int i = 0; i < 8; i++) {
+			letters.add(new JLabel(Character.toString((char)('a' + i)), SwingConstants.CENTER));
+			numbers.add(new JLabel(Integer.toString(8 - i), SwingConstants.CENTER));
+		}
+		
 		newGame();
 
+		frame.add(letters, BorderLayout.SOUTH);
+		//frame.add(letters, BorderLayout.NORTH);
+		frame.add(numbers, BorderLayout.WEST);
+		//frame.add(numbers, BorderLayout.EAST);
+		frame.pack();
+		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
@@ -74,7 +88,7 @@ public class Chess implements ActionListener {
 			}
 		}
 
-		frame.add(panel);
+		frame.add(panel, BorderLayout.CENTER);
 		frame.pack();
 	}
 
@@ -85,17 +99,15 @@ public class Chess implements ActionListener {
 			JButton btn = (JButton) e.getSource();
 			int x = btn.getActionCommand().charAt(0) - '0';
 			int y = btn.getActionCommand().charAt(1) - '0';
-			System.out.println("Pressed: " + x + " " + y);
+			Vec2 p = new Vec2(x, y);
 
 			if (selected == null) {
 				if (btn.getText() != " ") {
-					selected = new Vec2(x, y);
+					selected = p;
 					for (Component jbutt : panel.getComponents()) {
 						jbutt.setEnabled(false);
 					}
-					System.out.println("Moves:");
-					for (Vec2 move : board.getMoves(x, y)) {
-						System.out.println("\t" + move);
+					for (Vec2 move : board.getMoves(p)) {
 						getButton(move).setEnabled(true);
 						/* JOptionPane.showOptionDialog(frame, "What do you want to promote your pawn to?",
 									"Promotion", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -104,10 +116,11 @@ public class Chess implements ActionListener {
 					}
 				}
 			} else {
-				if (!selected.equals(new Vec2(x, y))) {
+				if (!selected.equals(p)) {
 					btn.setText(getButton(selected).getText());
 					getButton(selected).setText(" ");
-					board.move(selected, new Vec2(x, y));
+					board.move(selected, p);
+					System.out.println(selected + " to " + p);
 				}
 				selected = null;
 				for (Component jbutt : panel.getComponents()) {
