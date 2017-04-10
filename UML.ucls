@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.14" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="Board" project="Chess" file="/Chess/src/Board.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="299" width="209" x="-18" y="287"/>    
+    <position height="299" width="209" x="29" y="330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="Vec2" project="Chess" file="/Chess/src/Vec2.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="245" width="154" x="231" y="287"/>    
+    <position height="245" width="154" x="259" y="669"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <enumeration id="3" language="java" name="Board.Color" project="Chess" file="/Chess/src/Board.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="137" width="137" x="-18" y="626"/>    
+    <position height="137" width="137" x="29" y="669"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,33 +30,38 @@
   </enumeration>  
   <class id="4" language="java" name="Chess" project="Chess" file="/Chess/src/Chess.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="263" width="215" x="107" y="-16"/>    
+    <position height="263" width="215" x="198" y="27"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="5">    
+  <nesting id="5">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </nesting>  
+  <association id="6">    
+    <bendpoint x="268" y="330"/>    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="6" name="selected"/>      
-      <multiplicity id="7" minimum="0" maximum="1"/>    
+      <attribute id="7" name="selected"/>      
+      <multiplicity id="8" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="8">    
+  <dependency id="9">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="10">    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="9" name="board"/>      
-      <multiplicity id="10" minimum="0" maximum="1"/>    
+      <attribute id="11" name="board"/>      
+      <multiplicity id="12" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="11">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

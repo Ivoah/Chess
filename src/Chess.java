@@ -2,11 +2,16 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * Main Chess class
+ * Handles players, turns, and winning
+ */
 public class Chess implements ActionListener {
 
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 600;
 	
+	// Tile WIDTH and HEIGHT
 	private static final int T_WIDTH = WIDTH/8;
 	private static final int T_HEIGHT = HEIGHT/8;
 	
@@ -16,6 +21,11 @@ public class Chess implements ActionListener {
 
 	private Board board = null;
 
+	/**
+	 * Chess constructor
+	 * 
+	 * Sets up the swing GUI and makes a new Board
+	 */
 	public Chess() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -71,6 +81,11 @@ public class Chess implements ActionListener {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Reset the game
+	 * 
+	 * reset the swing panel and make a new Board
+	 */
 	private void newGame() {
 		frame.getContentPane().removeAll();
 		selected = null;
@@ -92,6 +107,9 @@ public class Chess implements ActionListener {
 		frame.pack();
 	}
 
+	/**
+	 * Handler for button presses
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "New Game") {
 			newGame();
@@ -131,10 +149,18 @@ public class Chess implements ActionListener {
 		frame.repaint();
 	}
 	
+	/**
+	 * Get the button at Vec2(x, y)
+	 * @param pos Vec2(x, y)
+	 * @return the JButton at x, y
+	 */
 	private JButton getButton(Vec2 pos) {
 		return (JButton)panel.getComponentAt(pos.getX()*T_WIDTH + + T_WIDTH/2, pos.getY()*T_HEIGHT + T_HEIGHT/2);
 	}
 
+	/**
+	 * Kickstart the program
+	 */
 	public static void main(String[] args) {
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		new Chess();

@@ -1,3 +1,6 @@
+/**
+ * Clqss for better handling of board coordinates
+ */
 public class Vec2 {
 	private int x;
 	private int y;
