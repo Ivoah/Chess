@@ -6,7 +6,7 @@ import java.util.*;
  */
 public class Board {
 
-	private static enum Color {WHITE, BLACK, EMPTY};
+	public static enum Color {WHITE, BLACK, EMPTY};
 
 	private static final char[][] start = new char[][] {
 		{'♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'},
@@ -192,5 +192,14 @@ public class Board {
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
 		history.add(from + " to " + to);
+	}
+	
+	/**
+	 * Calculate the utility of the board for a given color
+	 * @param color Color of player
+	 * @return utility of baord
+	 */
+	public int utility(Color color) {
+		return 0;
 	}
 }
