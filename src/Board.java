@@ -56,6 +56,26 @@ public class Board {
 		return board[y][x];
 	}
 	
+	public boolean danger(Vec2 pos, Color color) {
+		return danger(pos.getX(), pos.getY(), color);
+	}
+	
+	public boolean danger(int x, int y, Color color) {
+		Vec2 p = new Vec2(x, y);
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (getColor(j, i) != color && getColor(j, i) != Color.EMPTY) {
+					for (Vec2 move : getMoves(j, i)) {
+						if (move.equals(p)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	public ArrayList<Vec2> getMoves(Vec2 pos) {
 		return getMoves(pos.getX(), pos.getY());
 	}
