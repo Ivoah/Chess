@@ -40,7 +40,7 @@ public class Chess implements ActionListener {
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("File");
 		int cmd = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-
+		
 		JMenuItem open = new JMenuItem("Open...");
 		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, cmd));
 		open.addActionListener(this);
@@ -52,7 +52,7 @@ public class Chess implements ActionListener {
 		menu.add(save);
 
 		menu.add(new JSeparator());
-
+		
 		JMenuItem new_game = new JMenuItem("New Game");
 		new_game.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, cmd));
 		new_game.addActionListener(this);
@@ -60,22 +60,8 @@ public class Chess implements ActionListener {
 
 		menubar.add(menu);
 		frame.setJMenuBar(menubar);
-
-		JPanel letters = new JPanel(new GridLayout(1, 8));
-		JPanel numbers = new JPanel(new GridLayout(8, 1));
-		
-		for (int i = 0; i < 8; i++) {
-			letters.add(new JLabel(Character.toString((char)('a' + i)), SwingConstants.CENTER));
-			numbers.add(new JLabel(Integer.toString(8 - i), SwingConstants.CENTER));
-		}
 		
 		newGame();
-
-		frame.add(letters, BorderLayout.SOUTH);
-		//frame.add(letters, BorderLayout.NORTH);
-		frame.add(numbers, BorderLayout.WEST);
-		//frame.add(numbers, BorderLayout.EAST);
-		frame.pack();
 		
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
@@ -104,6 +90,19 @@ public class Chess implements ActionListener {
 		}
 
 		frame.add(panel, BorderLayout.CENTER);
+		
+		JPanel letters = new JPanel(new GridLayout(1, 8));
+		JPanel numbers = new JPanel(new GridLayout(8, 1));
+		
+		for (int i = 0; i < 8; i++) {
+			letters.add(new JLabel(Character.toString((char)('a' + i)), SwingConstants.CENTER));
+			numbers.add(new JLabel(Integer.toString(8 - i), SwingConstants.CENTER));
+		}
+		
+		frame.add(letters, BorderLayout.SOUTH);
+		//frame.add(letters, BorderLayout.NORTH);
+		frame.add(numbers, BorderLayout.WEST);
+		//frame.add(numbers, BorderLayout.EAST);
 		frame.pack();
 	}
 
@@ -125,6 +124,7 @@ public class Chess implements ActionListener {
 					for (Component jbutt : panel.getComponents()) {
 						jbutt.setEnabled(false);
 					}
+					btn.setEnabled(true);
 					for (Vec2 move : board.getMoves(p)) {
 						getButton(move).setEnabled(true);
 						/* JOptionPane.showOptionDialog(frame, "What do you want to promote your pawn to?",

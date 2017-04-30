@@ -56,19 +56,35 @@ public class Board {
 		return board[y][x];
 	}
 	
-	public boolean danger(Vec2 pos, Color color) {
-		return danger(pos.getX(), pos.getY(), color);
-	}
-	
-	public boolean danger(int x, int y, Color color) {
-		Vec2 p = new Vec2(x, y);
+	/**
+	 * Checks to see if a color's king is in check for this board
+	 * @param color Color of the player to check for
+	 * @return boolean if king is in check
+	 */
+	public boolean checkCheck(Color color) {
+		Vec2 king = null;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (getColor(j, i) == color && (board[i][j] == '♚' || board[i][j] == '♔')) {
+					king = new Vec2(j, i);
+				}
+			}
+		}
+				
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				if (getColor(j, i) != color && getColor(j, i) != Color.EMPTY) {
-					for (Vec2 move : getMoves(j, i)) {
-						if (move.equals(p)) {
-							return true;
+					if (board[i][j] == '♚' || board[i][j] == '♔') {
+						if (getColor(j, i) != color) {
+							for (int[] move : new int[][]{{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}) {
+								int nx = j + move[0];
+								int ny = i + move[1];
+								if (king.equals(nx, ny)) return true;
+							}
 						}
+					} else {
+						if (getMoves(j, i).contains(king)) return true;
 					}
 				}
 			}
@@ -89,7 +105,6 @@ public class Board {
 	public ArrayList<Vec2> getMoves(int x, int y) {
 		ArrayList<Vec2> moves = new ArrayList<>();
 		Color col = getColor(x, y);
-		moves.add(new Vec2(x, y));
 		switch (board[y][x]) {
 		case '♛':
 		case '♕':
@@ -161,17 +176,42 @@ public class Board {
 			break;
 		case '♚':
 		case '♔':
+			for (int[] move : new int[][]{{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}) {
+				int nx = x + move[0];
+				int ny = y + move[1];
+				if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && getColor(nx, ny) != col) {
+					Board testBoard = new Board(this);
+					testBoard.move(new Vec2(x, y), new Vec2(nx, ny));
+					if (!testBoard.checkCheck(col))
+						moves.add(new Vec2(nx, ny));
+				}
+			}
 			break;
 		case '♟':
-			moves.add(new Vec2(5, 5));
+			if (y == 7) break;
+			if (getColor(x, y + 1) == Color.EMPTY) moves.add(new Vec2(x, y + 1));
+			if (y == 1) {
+				if (getColor(x, y + 2) == Color.EMPTY) moves.add(new Vec2(x, y + 2));
+			}
+			
+			if (x > 0 && getColor(x - 1, y + 1) != col && getColor(x - 1, y + 1) != Color.EMPTY) moves.add(new Vec2(x - 1, y + 1));
+			if (x < 7 && getColor(x + 1, y + 1) != col && getColor(x + 1, y + 1) != Color.EMPTY) moves.add(new Vec2(x + 1, y + 1));
 			break;
 		case '♙':
+			if (y == 0) break;
+			if (getColor(x, y - 1) == Color.EMPTY) moves.add(new Vec2(x, y - 1));
+			if (y == 6) {
+				if (getColor(x, y - 2) == Color.EMPTY) moves.add(new Vec2(x, y - 2));
+			}
+			
+			if (x > 0 && getColor(x - 1, y - 1) != col && getColor(x - 1, y - 1) != Color.EMPTY) moves.add(new Vec2(x - 1, y - 1));
+			if (x < 7 && getColor(x + 1, y - 1) != col && getColor(x + 1, y - 1) != Color.EMPTY) moves.add(new Vec2(x + 1, y - 1));
 			break;
 		}
 		return moves;
 	}
 
-	private Color getColor(Vec2 pos) {
+	public Color getColor(Vec2 pos) {
 		return getColor(pos.getX(), pos.getY());
 	}
 
@@ -181,7 +221,7 @@ public class Board {
 	 * @param y
 	 * @return the piece's color
 	 */
-	private Color getColor(int x, int y) {
+	public Color getColor(int x, int y) {
 		switch (board[y][x]) {
 		case '♖':
 		case '♘':

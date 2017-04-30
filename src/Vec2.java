@@ -52,4 +52,12 @@ public class Vec2 {
 			return false;
 		return true;
 	}
+
+	public boolean equals(int x, int y) {
+		if (x != this.x)
+			return false;
+		if (y != this.y)
+			return false;
+		return true;
+	}
 }
