@@ -140,7 +140,7 @@ public class Chess implements ActionListener {
 				if (!selected.equals(p)) {
 					board.move(selected, p);
 					//System.out.println(selected + " to " + p);
-					board = new AI("Samantha", Board.Color.BLACK, 5).makeMove(board);
+					board = new AI(Board.Color.BLACK, 5).makeMove(board);
 				}
 				selected = null;
 				updateBoard();
