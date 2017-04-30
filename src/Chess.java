@@ -153,14 +153,20 @@ public class Chess implements ActionListener {
 	 * Synchronize internal board state and GUI
 	 */
 	private void updateBoard() {
+		boolean check = board.checkCheck(Board.Color.WHITE);
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				JButton button = getButton(j, i);
 				
 				button.setText(Character.toString(board.getPiece(j, i)));
 				
-				if (board.getColor(j, i) == Board.Color.WHITE) button.setEnabled(true);
-				else button.setEnabled(false);
+				if (check) {
+					if (board.getPiece(j, i) == '♔') button.setEnabled(true);
+					else button.setEnabled(false);
+				} else {
+					if (board.getColor(j, i) == Board.Color.WHITE) button.setEnabled(true);
+					else button.setEnabled(false);
+				}
 			}
 		}
 	}
