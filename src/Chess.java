@@ -18,6 +18,8 @@ public class Chess implements ActionListener {
 	private Vec2 selected;
 	private JFrame frame;
 	private JPanel panel;
+	
+	private Board.Color currentPlayer;
 
 	private Board board = null;
 
@@ -73,9 +75,11 @@ public class Chess implements ActionListener {
 	 * reset the swing panel and make a new Board
 	 */
 	private void newGame() {
-		frame.getContentPane().removeAll();
+		currentPlayer = Board.Color.WHITE;
 		selected = null;
 		board = new Board();
+		
+		frame.getContentPane().removeAll();
 		panel = new JPanel(new GridLayout(8, 8));
 		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		for (int i = 0; i < 8; i++) {
@@ -85,6 +89,8 @@ public class Chess implements ActionListener {
 				btn.setFont(new Font("", Font.PLAIN, 42));
 				btn.addActionListener(this);
 				btn.setFocusable(false);
+				if (i > 5) btn.setEnabled(true);
+				else btn.setEnabled(false);
 				panel.add(btn);
 			}
 		}
@@ -135,14 +141,19 @@ public class Chess implements ActionListener {
 				}
 			} else {
 				if (!selected.equals(p)) {
+					if (currentPlayer == Board.Color.WHITE) currentPlayer = Board.Color.BLACK;
+					else currentPlayer = Board.Color.WHITE;
 					btn.setText(getButton(selected).getText());
 					getButton(selected).setText(" ");
 					board.move(selected, p);
 					System.out.println(selected + " to " + p);
 				}
 				selected = null;
-				for (Component jbutt : panel.getComponents()) {
-					jbutt.setEnabled(true);
+				for (int i = 0; i < 8; i++) {
+					for (int j = 0; j < 8; j++) {
+						if (board.getColor(j, i) == currentPlayer) getButton(j, i).setEnabled(true);
+						else getButton(j, i).setEnabled(false);
+					}
 				}
 			}
 		}
@@ -155,7 +166,11 @@ public class Chess implements ActionListener {
 	 * @return the JButton at x, y
 	 */
 	private JButton getButton(Vec2 pos) {
-		return (JButton)panel.getComponentAt(pos.getX()*T_WIDTH + + T_WIDTH/2, pos.getY()*T_HEIGHT + T_HEIGHT/2);
+		return getButton(pos.getX(), pos.getY());
+	}
+	
+	private JButton getButton(int x, int y) {
+		return (JButton)panel.getComponentAt(x*T_WIDTH + + T_WIDTH/2, y*T_HEIGHT + T_HEIGHT/2);
 	}
 
 	/**
