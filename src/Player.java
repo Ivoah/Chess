@@ -1,7 +1,7 @@
 
 public abstract class Player {
 	private String name;
-	private Board.Color color;
+	protected Board.Color color;
 	
 	public Player(String name, Board.Color color) {
 		this.name = name;

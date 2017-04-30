@@ -252,6 +252,7 @@ public class Board {
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
 		history.add(from + " to " + to);
+		System.out.println(from + " to " + to);
 	}
 	
 	/**
