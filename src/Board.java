@@ -190,7 +190,7 @@ public class Board {
 		case '♟':
 			if (y == 7) break;
 			if (getColor(x, y + 1) == Color.EMPTY) moves.add(new Vec2(x, y + 1));
-			if (y == 1) {
+			if (y == 1 && getColor(x, 2) == Color.EMPTY) {
 				if (getColor(x, y + 2) == Color.EMPTY) moves.add(new Vec2(x, y + 2));
 			}
 			
@@ -200,7 +200,7 @@ public class Board {
 		case '♙':
 			if (y == 0) break;
 			if (getColor(x, y - 1) == Color.EMPTY) moves.add(new Vec2(x, y - 1));
-			if (y == 6) {
+			if (y == 6  && getColor(x, 5) == Color.EMPTY) {
 				if (getColor(x, y - 2) == Color.EMPTY) moves.add(new Vec2(x, y - 2));
 			}
 			
