@@ -73,7 +73,6 @@ public class Chess implements ActionListener {
 	 * reset the swing panel and make a new Board
 	 */
 	private void newGame() {
-		currentPlayer = Board.Color.WHITE;
 		selected = null;
 		board = new Board();
 		

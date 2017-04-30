@@ -1,11 +1,12 @@
 import java.util.*;
 
-public class AI extends Player {
+public class AI {
 	
+	private Board.Color color;
 	private int difficulty;
 	
-	public AI(String name, Board.Color color, int difficulty) {
-		super(name, color);
+	public AI(Board.Color color, int difficulty) {
+		this.color = color;
 		this.difficulty = difficulty;
 	}
 	
