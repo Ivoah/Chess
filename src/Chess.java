@@ -19,8 +19,6 @@ public class Chess implements ActionListener {
 	private JFrame frame;
 	private JPanel panel;
 	
-	private Board.Color currentPlayer;
-
 	private Board board = null;
 
 	/**
@@ -141,8 +139,6 @@ public class Chess implements ActionListener {
 				}
 			} else {
 				if (!selected.equals(p)) {
-					//if (currentPlayer == Board.Color.WHITE) currentPlayer = Board.Color.BLACK;
-					//else currentPlayer = Board.Color.WHITE;
 					board.move(selected, p);
 					//System.out.println(selected + " to " + p);
 					board = new AI("Samantha", Board.Color.BLACK, 5).makeMove(board);
@@ -164,7 +160,7 @@ public class Chess implements ActionListener {
 				
 				button.setText(Character.toString(board.getPiece(j, i)));
 				
-				if (board.getColor(j, i) == currentPlayer) button.setEnabled(true);
+				if (board.getColor(j, i) == Board.Color.WHITE) button.setEnabled(true);
 				else button.setEnabled(false);
 			}
 		}
