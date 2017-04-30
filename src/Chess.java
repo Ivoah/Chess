@@ -145,6 +145,7 @@ public class Chess implements ActionListener {
 					else currentPlayer = Board.Color.White;
 					System.out.println(selected + " to " + p);
 					board.move(selected, p);
+					updateBoard();
 					if (board.checkDraw(currentPlayer)) {
 						if (JOptionPane.showConfirmDialog(frame, "Draw!\nPlay again?", "Draw!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 							newGame();
@@ -158,9 +159,10 @@ public class Chess implements ActionListener {
 							System.exit(0);
 						}
 					}
+				} else {
+					updateBoard();
 				}
 				selected = null;
-				updateBoard();
 			}
 		}
 		frame.repaint();
