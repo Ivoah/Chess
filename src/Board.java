@@ -305,7 +305,7 @@ public class Board {
 	/**
 	 * Calculate the utility of the board for a given color
 	 * @param color Color of player
-	 * @return utility of baord
+	 * @return utility of board
 	 */
 	public int utility(Color color) {
 		int total = 0;
