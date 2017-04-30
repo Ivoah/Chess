@@ -48,11 +48,11 @@ public class Board {
 		history = new ArrayList<>(init.history);
 	}
 
-	public char getPiece(Vec2 pos) {
+	public Character getPiece(Vec2 pos) {
 		return board[pos.getY()][pos.getX()];
 	}
 
-	public char getPiece(int x, int y) {
+	public Character getPiece(int x, int y) {
 		return board[y][x];
 	}
 	
@@ -280,12 +280,42 @@ public class Board {
 		history.add(from + " to " + to);
 	}
 	
+	private int pieceValue(char piece) {
+		switch (piece) {
+		case '♖':
+		case '♜':
+			return 5;
+		case '♘':
+		case '♞':
+			return 3;
+		case '♗':
+		case '♝':
+			return 3;
+		case '♕':
+		case '♛':
+			return 9;
+		case '♙':
+		case '♟':
+			return 1;
+		default:
+			return 0;
+		}
+	}
+	
 	/**
 	 * Calculate the utility of the board for a given color
 	 * @param color Color of player
 	 * @return utility of baord
 	 */
 	public int utility(Color color) {
-		return 0;
+		int total = 0;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (getColor(j, i) == color) total += pieceValue(board[i][j]);
+			}
+		}
+		
+		return total;
 	}
 }

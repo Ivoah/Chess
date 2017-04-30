@@ -84,7 +84,7 @@ public class Chess implements ActionListener {
 		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				JButton btn = new JButton(Character.toString(board.getPiece(j, i)));
+				JButton btn = new JButton(board.getPiece(j, i).toString());
 				btn.setActionCommand(j + "" + i);
 				btn.setFont(new Font("", Font.PLAIN, 42));
 				btn.addActionListener(this);
@@ -182,7 +182,7 @@ public class Chess implements ActionListener {
 			for (int j = 0; j < 8; j++) {
 				JButton button = getButton(j, i);
 				
-				button.setText(Character.toString(board.getPiece(j, i)));
+				button.setText(board.getPiece(j, i).toString());
 				
 				if (check) {
 					if (board.getPiece(j, i) == '♔') button.setEnabled(true);
