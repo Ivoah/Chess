@@ -22,6 +22,7 @@ public class Chess implements ActionListener {
 	private Board board = null;
 	
 	private Board.Color currentPlayer;
+	private AI ai;
 
 	/**
 	 * Chess constructor
@@ -75,6 +76,21 @@ public class Chess implements ActionListener {
 	 * reset the swing panel and make a new Board
 	 */
 	private void newGame() {
+		while (true) {
+			try {
+				int difficulty = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter AI difficulty"));
+				if (difficulty < 1 || difficulty > 10) {
+					JOptionPane.showMessageDialog(frame, "Enter a number between 1 and 10");
+					continue;
+				}
+
+				ai = new AI(Board.Color.Black, difficulty);
+				break;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(frame, "Please enter an integer!");
+			}
+		}
+		
 		currentPlayer = Board.Color.White;
 		selected = null;
 		board = new Board();
