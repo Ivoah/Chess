@@ -27,6 +27,7 @@ public class AI {
 		Vec2 piece = pieces.get(rand.nextInt(pieces.size()));
 		Vec2 move = board.getMoves(piece).get(rand.nextInt(board.getMoves(piece).size()));
 		
+		System.out.println(piece + " to " + move);
 		b.move(piece, move);
 		return b;
 	}

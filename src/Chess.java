@@ -20,6 +20,8 @@ public class Chess implements ActionListener {
 	private JPanel panel;
 	
 	private Board board = null;
+	
+	private Board.Color currentPlayer;
 
 	/**
 	 * Chess constructor
@@ -73,6 +75,7 @@ public class Chess implements ActionListener {
 	 * reset the swing panel and make a new Board
 	 */
 	private void newGame() {
+		currentPlayer = Board.Color.White;
 		selected = null;
 		board = new Board();
 		
@@ -138,9 +141,23 @@ public class Chess implements ActionListener {
 				}
 			} else {
 				if (!selected.equals(p)) {
+					if (currentPlayer == Board.Color.White) currentPlayer = Board.Color.Black;
+					else currentPlayer = Board.Color.White;
+					System.out.println(selected + " to " + p);
 					board.move(selected, p);
-					//System.out.println(selected + " to " + p);
-					board = new AI(Board.Color.BLACK, 5).makeMove(board);
+					if (board.checkDraw(currentPlayer)) {
+						if (JOptionPane.showConfirmDialog(frame, "Draw!\nPlay again?", "Draw!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							newGame();
+						} else {
+							System.exit(0);
+						}
+					} else if (board.checkCheckmate(currentPlayer)) {
+						if (JOptionPane.showConfirmDialog(frame, otherColor(currentPlayer) + " won!\nPlay again?", otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							newGame();
+						} else {
+							System.exit(0);
+						}
+					}
 				}
 				selected = null;
 				updateBoard();
@@ -149,11 +166,16 @@ public class Chess implements ActionListener {
 		frame.repaint();
 	}
 	
+	private Board.Color otherColor(Board.Color color) {
+		if (color == Board.Color.White) return Board.Color.Black;
+		else return Board.Color.White;
+	}
+	
 	/**
 	 * Synchronize internal board state and GUI
 	 */
 	private void updateBoard() {
-		boolean check = board.checkCheck(Board.Color.WHITE);
+		boolean check = board.checkCheck(currentPlayer);
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				JButton button = getButton(j, i);
@@ -164,7 +186,7 @@ public class Chess implements ActionListener {
 					if (board.getPiece(j, i) == '♔') button.setEnabled(true);
 					else button.setEnabled(false);
 				} else {
-					if (board.getColor(j, i) == Board.Color.WHITE) button.setEnabled(true);
+					if (board.getColor(j, i) == currentPlayer) button.setEnabled(true);
 					else button.setEnabled(false);
 				}
 			}

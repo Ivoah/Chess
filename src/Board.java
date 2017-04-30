@@ -6,7 +6,7 @@ import java.util.*;
  */
 public class Board {
 
-	public static enum Color {WHITE, BLACK, EMPTY};
+	public static enum Color {White, Black, EMPTY};
 
 	private static final char[][] start = new char[][] {
 		{'♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'},
@@ -54,6 +54,32 @@ public class Board {
 
 	public char getPiece(int x, int y) {
 		return board[y][x];
+	}
+	
+	public boolean checkDraw(Color color) {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (getColor(j, i) == color) {
+					if (getMoves(j, i).size() > 0) return false;
+				}
+			}
+		}
+	
+		return !checkCheck(color);
+	}
+	
+	public boolean checkCheckmate(Color color) {
+		Vec2 king = null;
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (getColor(j, i) == color && (board[i][j] == '♚' || board[i][j] == '♔')) {
+					king = new Vec2(j, i);
+				}
+			}
+		}
+		
+		return checkCheck(color) && getMoves(king).size() == 0;
 	}
 	
 	/**
@@ -229,14 +255,14 @@ public class Board {
 		case '♕':
 		case '♔':
 		case '♙':
-			return Color.WHITE;
+			return Color.White;
 		case '♜':
 		case '♞':
 		case '♝':
 		case '♛':
 		case '♚':
 		case '♟':
-			return Color.BLACK;
+			return Color.Black;
 		default:
 			return Color.EMPTY;
 		}
@@ -252,7 +278,6 @@ public class Board {
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
 		history.add(from + " to " + to);
-		System.out.println(from + " to " + to);
 	}
 	
 	/**

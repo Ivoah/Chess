@@ -20,6 +20,22 @@ public class Vec2 {
 		this.y = copy.y;
 	}
 
+	Vec2 add(Vec2 other) {
+		return new Vec2(this.x + other.x, this.y + other.y);
+	}
+	
+	Vec2 add(int x, int y) {
+		return new Vec2(this.x + x, this.y + y);
+	}
+	
+	boolean within(int x1, int y1, int x2, int y2) {
+		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+	}
+	
+	boolean within(Vec2 p1, Vec2 p2) {
+		return x >= p1.x && x <= p2.x && y >= p1.y && y <= p2.y;
+	}
+	
 	public int getX() { return this.x; }
 	public int getY() { return this.y; }
 	
