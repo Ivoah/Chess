@@ -14,13 +14,32 @@ public class AI {
 	
 	private ArrayList<Board> successors(Board state) {
 		ArrayList<Board> states = new ArrayList<>();
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				if (state.getColor(j, i) == this.color) {
-					for (Vec2 move : state.getMoves(j, i)) {
-						Board newState = new Board(state);
-						newState.move(new Vec2(j, i), move);
-						states.add(newState);
+		
+		if (state.checkCheck(this.color)) {
+			Vec2 king = null;
+			
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					if (state.getColor(j, i) == this.color && (state.getPiece(j, i) == '♚' || state.getPiece(j, i) == '♔')) {
+						king = new Vec2(j, i);
+					}
+				}
+			}
+			
+			for (Vec2 move : state.getMoves(king)) {
+				Board newState = new Board(state);
+				newState.move(king, move);
+				states.add(newState);
+			}
+		} else {
+			for (int i = 0; i < 8; i++) {
+				for (int j = 0; j < 8; j++) {
+					if (state.getColor(j, i) == this.color) {
+						for (Vec2 move : state.getMoves(j, i)) {
+							Board newState = new Board(state);
+							newState.move(new Vec2(j, i), move);
+							states.add(newState);
+						}
 					}
 				}
 			}
@@ -53,7 +72,7 @@ public class AI {
 	 */
 	private int max(Board board, int depth) {
 		if (depth <= 0) return board.utility(this.color);
-		if (board.checkCheckmate(this.color)) return 0;
+		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
 		if (board.checkCheckmate(Chess.otherColor(this.color))) return Integer.MAX_VALUE;
 		
 		int v = Integer.MIN_VALUE;
@@ -71,8 +90,8 @@ public class AI {
 	 * @return
 	 */
 	private int min(Board board, int depth) {
-		if (depth <= 0) return board.utility(Chess.otherColor(this.color));
-		if (board.checkCheckmate(this.color)) return 0;
+		if (depth <= 0) return board.utility(this.color);
+		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
 		if (board.checkCheckmate(Chess.otherColor(this.color))) return Integer.MAX_VALUE;
 		
 		int v = Integer.MAX_VALUE;
