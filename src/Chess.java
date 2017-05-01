@@ -169,7 +169,7 @@ public class Chess implements ActionListener {
 							System.exit(0);
 						}
 					} else if (board.checkCheckmate(currentPlayer)) {
-						if (JOptionPane.showConfirmDialog(frame, otherColor(currentPlayer) + " won!\nPlay again?", otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						if (JOptionPane.showConfirmDialog(frame, Board.otherColor(currentPlayer) + " won!\nPlay again?", Board.otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 							newGame();
 						} else {
 							System.exit(0);
@@ -184,7 +184,7 @@ public class Chess implements ActionListener {
 								System.exit(0);
 							}
 						} else if (board.checkCheckmate(ai.getColor())) {
-							if (JOptionPane.showConfirmDialog(frame, otherColor(ai.getColor()) + " won!\nPlay again?", otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							if (JOptionPane.showConfirmDialog(frame, Board.otherColor(ai.getColor()) + " won!\nPlay again?", Board.otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								newGame();
 							} else {
 								System.exit(0);
@@ -198,11 +198,6 @@ public class Chess implements ActionListener {
 			}
 		}
 		frame.repaint();
-	}
-	
-	public static Board.Color otherColor(Board.Color color) {
-		if (color == Board.Color.White) return Board.Color.Black;
-		else return Board.Color.White;
 	}
 	
 	/**

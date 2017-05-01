@@ -73,7 +73,7 @@ public class AI {
 	private int max(Board board, int depth) {
 		if (depth <= 0) return board.utility(this.color);
 		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
-		if (board.checkCheckmate(Chess.otherColor(this.color))) return Integer.MAX_VALUE;
+		if (board.checkCheckmate(Board.otherColor(this.color))) return Integer.MAX_VALUE;
 		
 		int v = Integer.MIN_VALUE;
 		
@@ -92,7 +92,7 @@ public class AI {
 	private int min(Board board, int depth) {
 		if (depth <= 0) return board.utility(this.color);
 		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
-		if (board.checkCheckmate(Chess.otherColor(this.color))) return Integer.MAX_VALUE;
+		if (board.checkCheckmate(Board.otherColor(this.color))) return Integer.MAX_VALUE;
 		
 		int v = Integer.MAX_VALUE;
 		

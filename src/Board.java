@@ -319,4 +319,9 @@ public class Board {
 		
 		return total;
 	}
+	
+	public static Color otherColor(Color color) {
+		if (color == Color.White) return Color.Black;
+		else return Color.White;
+	}
 }
