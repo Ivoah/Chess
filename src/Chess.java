@@ -157,8 +157,8 @@ public class Chess implements ActionListener {
 				}
 			} else {
 				if (!selected.equals(p)) {
-					if (currentPlayer == Board.Color.White) currentPlayer = Board.Color.Black;
-					else currentPlayer = Board.Color.White;
+					//if (currentPlayer == Board.Color.White) currentPlayer = Board.Color.Black;
+					//else currentPlayer = Board.Color.White;
 					System.out.println(selected + " to " + p);
 					board.move(selected, p);
 					updateBoard();
@@ -174,6 +174,22 @@ public class Chess implements ActionListener {
 						} else {
 							System.exit(0);
 						}
+					} else {
+						board = ai.makeMove(board);
+						updateBoard();
+						if (board.checkDraw(ai.getColor())) {
+							if (JOptionPane.showConfirmDialog(frame, "Draw!\nPlay again?", "Draw!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								newGame();
+							} else {
+								System.exit(0);
+							}
+						} else if (board.checkCheckmate(ai.getColor())) {
+							if (JOptionPane.showConfirmDialog(frame, otherColor(ai.getColor()) + " won!\nPlay again?", otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								newGame();
+							} else {
+								System.exit(0);
+							}
+						}
 					}
 				} else {
 					updateBoard();
@@ -184,7 +200,7 @@ public class Chess implements ActionListener {
 		frame.repaint();
 	}
 	
-	private Board.Color otherColor(Board.Color color) {
+	public static Board.Color otherColor(Board.Color color) {
 		if (color == Board.Color.White) return Board.Color.Black;
 		else return Board.Color.White;
 	}
