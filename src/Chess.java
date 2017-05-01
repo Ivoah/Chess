@@ -105,7 +105,7 @@ public class Chess implements ActionListener {
 				btn.setFont(new Font("", Font.PLAIN, 42));
 				btn.addActionListener(this);
 				btn.setFocusable(false);
-				if (i > 5) btn.setEnabled(true);
+				if (board.getColor(j, i) == currentPlayer && board.getMoves(j, i).size() > 0) btn.setEnabled(true);
 				else btn.setEnabled(false);
 				panel.add(btn);
 			}
