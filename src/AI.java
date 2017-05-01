@@ -12,7 +12,7 @@ public class AI {
 		this.rand = new Random();
 	}
 	
-	private ArrayList<Board> successors(Board state) {
+	private ArrayList<Board> successors(Board state, Board.Color color) {
 		ArrayList<Board> states = new ArrayList<>();
 		
 		if (state.checkCheck(this.color)) {
@@ -20,7 +20,7 @@ public class AI {
 			
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
-					if (state.getColor(j, i) == this.color && (state.getPiece(j, i) == '♚' || state.getPiece(j, i) == '♔')) {
+					if (state.getColor(j, i) == color && (state.getPiece(j, i) == '♚' || state.getPiece(j, i) == '♔')) {
 						king = new Vec2(j, i);
 					}
 				}
@@ -34,7 +34,7 @@ public class AI {
 		} else {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 0; j < 8; j++) {
-					if (state.getColor(j, i) == this.color) {
+					if (state.getColor(j, i) == color) {
 						for (Vec2 move : state.getMoves(j, i)) {
 							Board newState = new Board(state);
 							newState.move(new Vec2(j, i), move);
@@ -52,15 +52,24 @@ public class AI {
 	}
 	
 	public Board makeMove(Board board) {
-		int v = max(board, this.difficulty);
-		ArrayList<Board> states = new ArrayList<>();
-		for (Board state : successors(board)) {
-			if (state.utility(this.color) == v) {
-				states.add(state);
+		int v = Integer.MIN_VALUE;
+		ArrayList<Object[]> states = new ArrayList<>();
+		for (Board state : successors(board, this.color)) {
+			int m = max(state, this.difficulty);
+			if (v <= m) {
+				v = m;
+				states.add(new Object[]{m, state});
 			}
 		}
 		
-		Board state = states.get(this.rand.nextInt(states.size()));
+		ArrayList<Board> maxStates = new ArrayList<>();
+		for (Object[] state : states) {
+			if ((int)state[0] == v) {
+				maxStates.add((Board)state[1]);
+			}
+		}
+		
+		Board state = maxStates.get(this.rand.nextInt(maxStates.size()));
 		System.out.println(state.history.get(state.history.size() - 1));
 		return state;
 	}
@@ -77,7 +86,7 @@ public class AI {
 		
 		int v = Integer.MIN_VALUE;
 		
-		for (Board state : successors(board)) {
+		for (Board state : successors(board, this.color)) {
 			v = Math.max(v, min(state, depth - 1));
 		}
 		
@@ -96,7 +105,7 @@ public class AI {
 		
 		int v = Integer.MAX_VALUE;
 		
-		for (Board state : successors(board)) {
+		for (Board state : successors(board, Board.otherColor(this.color))) {
 			v = Math.min(v, max(state, depth - 1));
 		}
 		
