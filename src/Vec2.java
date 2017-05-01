@@ -15,6 +15,11 @@ public class Vec2 {
 		this.y = y;
 	}
 	
+	public Vec2(String s) {
+		this.x = s.charAt(0) - 'a';
+		this.y = 8 - Character.getNumericValue(s.charAt(1));
+	}
+	
 	public Vec2(Vec2 copy) {
 		this.x = copy.x;
 		this.y = copy.y;

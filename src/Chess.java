@@ -79,8 +79,8 @@ public class Chess implements ActionListener {
 		while (true) {
 			try {
 				int difficulty = Integer.parseInt(JOptionPane.showInputDialog(frame, "Enter AI difficulty"));
-				if (difficulty < 1 || difficulty > 10) {
-					JOptionPane.showMessageDialog(frame, "Enter a number between 1 and 10");
+				if (difficulty < 1 || difficulty > 5) {
+					JOptionPane.showMessageDialog(frame, "Enter a number between 1 and 5");
 					continue;
 				}
 
@@ -162,14 +162,14 @@ public class Chess implements ActionListener {
 					System.out.println(selected + " to " + p);
 					board.move(selected, p);
 					updateBoard();
-					if (board.checkDraw(currentPlayer)) {
+					if (board.checkDraw(Board.otherColor(currentPlayer))) {
 						if (JOptionPane.showConfirmDialog(frame, "Draw!\nPlay again?", "Draw!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 							newGame();
 						} else {
 							System.exit(0);
 						}
-					} else if (board.checkCheckmate(currentPlayer)) {
-						if (JOptionPane.showConfirmDialog(frame, Board.otherColor(currentPlayer) + " won!\nPlay again?", Board.otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					} else if (board.checkCheckmate(Board.otherColor(currentPlayer))) {
+						if (JOptionPane.showConfirmDialog(frame, currentPlayer + " won!\nPlay again?", currentPlayer + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 							newGame();
 						} else {
 							System.exit(0);
@@ -177,14 +177,14 @@ public class Chess implements ActionListener {
 					} else {
 						board = ai.makeMove(board);
 						updateBoard();
-						if (board.checkDraw(ai.getColor())) {
+						if (board.checkDraw(currentPlayer)) {
 							if (JOptionPane.showConfirmDialog(frame, "Draw!\nPlay again?", "Draw!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								newGame();
 							} else {
 								System.exit(0);
 							}
-						} else if (board.checkCheckmate(ai.getColor())) {
-							if (JOptionPane.showConfirmDialog(frame, Board.otherColor(ai.getColor()) + " won!\nPlay again?", Board.otherColor(currentPlayer) + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+						} else if (board.checkCheckmate(currentPlayer)) {
+							if (JOptionPane.showConfirmDialog(frame, ai.getColor() + " won!\nPlay again?", ai.getColor() + " won!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								newGame();
 							} else {
 								System.exit(0);
@@ -204,20 +204,13 @@ public class Chess implements ActionListener {
 	 * Synchronize internal board state and GUI
 	 */
 	private void updateBoard() {
-		boolean check = board.checkCheck(currentPlayer);
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				JButton button = getButton(j, i);
 				
 				button.setText(board.getPiece(j, i).toString());
-				
-				if (check) {
-					if (board.getPiece(j, i) == '♔') button.setEnabled(true);
-					else button.setEnabled(false);
-				} else {
-					if (board.getColor(j, i) == currentPlayer) button.setEnabled(true);
-					else button.setEnabled(false);
-				}
+				if (board.getColor(j, i) == currentPlayer && board.getMoves(j, i).size() > 0) button.setEnabled(true);
+				else button.setEnabled(false);
 			}
 		}
 	}

@@ -20,21 +20,19 @@ public class Board {
 	};
 
 	char[][] board = new char[8][8];
-	char[][] prev = new char[8][8];
 	List<String> history = new ArrayList<>();
-
 	
 	public Board() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = start[i][j];
-				prev[i][j] = board[i][j];
+				//prev[i][j] = board[i][j];
 			}
 		}
 	}
 
 	/**
-	 * Copy contstructor
+	 * Copy constructor
 	 * Does a deep copy
 	 * @param Board to copy
 	 */
@@ -42,7 +40,7 @@ public class Board {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = init.board[i][j];
-				prev[i][j] = board[i][j];
+				//prev[i][j] = board[i][j];
 			}
 		}
 		history = new ArrayList<>(init.history);
@@ -69,17 +67,15 @@ public class Board {
 	}
 	
 	public boolean checkCheckmate(Color color) {
-		Vec2 king = null;
-		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				if (getColor(j, i) == color && (board[i][j] == '♚' || board[i][j] == '♔')) {
-					king = new Vec2(j, i);
+				if (getColor(j, i) == color) {
+					if (getMoves(j, i).size() > 0) return false;
 				}
 			}
 		}
-		
-		return checkCheck(color) && getMoves(king).size() == 0;
+	
+		return checkCheck(color);
 	}
 	
 	/**
@@ -110,7 +106,7 @@ public class Board {
 							}
 						}
 					} else {
-						if (getMoves(j, i).contains(king)) return true;
+						if (getMoves(j, i, true).contains(king)) return true;
 					}
 				}
 			}
@@ -128,7 +124,12 @@ public class Board {
 	 * @param y y position of the piece
 	 * @return ArrayList of of possible moves
 	 */
+	
 	public ArrayList<Vec2> getMoves(int x, int y) {
+		return getMoves(x, y, false);
+	}
+	
+	public ArrayList<Vec2> getMoves(int x, int y, boolean checkingCheck) {
 		ArrayList<Vec2> moves = new ArrayList<>();
 		Color col = getColor(x, y);
 		switch (board[y][x]) {
@@ -206,10 +207,7 @@ public class Board {
 				int nx = x + move[0];
 				int ny = y + move[1];
 				if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8 && getColor(nx, ny) != col) {
-					Board testBoard = new Board(this);
-					testBoard.move(new Vec2(x, y), new Vec2(nx, ny));
-					if (!testBoard.checkCheck(col))
-						moves.add(new Vec2(nx, ny));
+					moves.add(new Vec2(nx, ny));
 				}
 			}
 			break;
@@ -234,7 +232,21 @@ public class Board {
 			if (x < 7 && getColor(x + 1, y - 1) != col && getColor(x + 1, y - 1) != Color.EMPTY) moves.add(new Vec2(x + 1, y - 1));
 			break;
 		}
-		return moves;
+		
+		if (!checkingCheck) {
+			ArrayList<Vec2> realMoves = new ArrayList<>();
+			
+			for (Vec2 move : moves) {
+				Board testBoard = new Board(this);
+				testBoard.move(new Vec2(x, y), move);
+				if (!testBoard.checkCheck(col))
+					realMoves.add(move);
+			}
+			
+			return realMoves;
+		} else {
+			return moves;
+		}
 	}
 
 	public Color getColor(Vec2 pos) {
@@ -274,10 +286,14 @@ public class Board {
 	 * @param to
 	 */
 	public void move(Vec2 from, Vec2 to) {
-		prev[to.getY()][to.getX()] = board[to.getY()][to.getX()];
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
 		history.add(from + " to " + to);
+	}
+	
+	public void move(String move) {
+		String[] s = move.split(" ");
+		move(new Vec2(s[0]), new Vec2(s[2]));
 	}
 	
 	private int pieceValue(char piece) {
@@ -318,6 +334,22 @@ public class Board {
 		}
 		
 		return total;
+	}
+	
+	public List<String> getHistory() {
+		return history;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				sb.append(board[i][j] + "|");
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
 	
 	public static Color otherColor(Color color) {

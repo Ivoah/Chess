@@ -15,31 +15,13 @@ public class AI {
 	private ArrayList<Board> successors(Board state, Board.Color color) {
 		ArrayList<Board> states = new ArrayList<>();
 		
-		if (state.checkCheck(this.color)) {
-			Vec2 king = null;
-			
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (state.getColor(j, i) == color && (state.getPiece(j, i) == '♚' || state.getPiece(j, i) == '♔')) {
-						king = new Vec2(j, i);
-					}
-				}
-			}
-			
-			for (Vec2 move : state.getMoves(king)) {
-				Board newState = new Board(state);
-				newState.move(king, move);
-				states.add(newState);
-			}
-		} else {
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (state.getColor(j, i) == color) {
-						for (Vec2 move : state.getMoves(j, i)) {
-							Board newState = new Board(state);
-							newState.move(new Vec2(j, i), move);
-							states.add(newState);
-						}
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (state.getColor(j, i) == color) {
+					for (Vec2 move : state.getMoves(j, i)) {
+						Board newState = new Board(state);
+						newState.move(new Vec2(j, i), move);
+						states.add(newState);
 					}
 				}
 			}
@@ -53,19 +35,13 @@ public class AI {
 	
 	public Board makeMove(Board board) {
 		int v = Integer.MIN_VALUE;
-		ArrayList<Object[]> states = new ArrayList<>();
+		ArrayList<Board> maxStates = new ArrayList<>();
 		for (Board state : successors(board, this.color)) {
 			int m = max(state, this.difficulty);
-			if (v <= m) {
-				v = m;
-				states.add(new Object[]{m, state});
-			}
-		}
-		
-		ArrayList<Board> maxStates = new ArrayList<>();
-		for (Object[] state : states) {
-			if ((int)state[0] == v) {
-				maxStates.add((Board)state[1]);
+			if (v == m) {
+				maxStates.add(state);
+			} else if (v < m) {
+				maxStates.clear();
 			}
 		}
 		
@@ -81,6 +57,7 @@ public class AI {
 	 */
 	private int max(Board board, int depth) {
 		if (depth <= 0) return board.utility(this.color);
+		if (board.checkDraw(this.color) || board.checkDraw(Board.otherColor(this.color))) return Integer.MIN_VALUE + 1;
 		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
 		if (board.checkCheckmate(Board.otherColor(this.color))) return Integer.MAX_VALUE;
 		
@@ -100,6 +77,7 @@ public class AI {
 	 */
 	private int min(Board board, int depth) {
 		if (depth <= 0) return board.utility(this.color);
+		if (board.checkDraw(this.color) || board.checkDraw(Board.otherColor(this.color))) return Integer.MIN_VALUE + 1;
 		if (board.checkCheckmate(this.color)) return Integer.MIN_VALUE;
 		if (board.checkCheckmate(Board.otherColor(this.color))) return Integer.MAX_VALUE;
 		
