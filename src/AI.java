@@ -37,7 +37,7 @@ public class AI {
 		int v = Integer.MIN_VALUE;
 		List<Board> maxStates = new ArrayList<>();
 		for (Board state : successors(board, this.color)) {
-			int m = max(state, this.difficulty);
+			int m = min(state, this.difficulty);
 			//System.out.println(m);
 			if (v == m) {
 				maxStates.add(state);
