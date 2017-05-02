@@ -102,7 +102,19 @@ public class Board {
 							for (int[] move : new int[][]{{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}) {
 								int nx = j + move[0];
 								int ny = i + move[1];
-								if (king.equals(nx, ny)) return true;
+								try {
+									if (king.equals(nx, ny)) return true;
+								} catch (NullPointerException e) {
+									Board b = new Board();
+									System.out.print(b);
+									System.out.println("----------------");
+									for (String s : history) {
+										b.move(s);
+										System.out.print(b);
+										System.out.println("----------------");
+									}
+									throw e;
+								}
 							}
 						}
 					} else {
@@ -114,7 +126,7 @@ public class Board {
 		return false;
 	}
 	
-	public ArrayList<Vec2> getMoves(Vec2 pos) {
+	public List<Vec2> getMoves(Vec2 pos) {
 		return getMoves(pos.getX(), pos.getY());
 	}
 
@@ -125,12 +137,12 @@ public class Board {
 	 * @return ArrayList of of possible moves
 	 */
 	
-	public ArrayList<Vec2> getMoves(int x, int y) {
+	public List<Vec2> getMoves(int x, int y) {
 		return getMoves(x, y, false);
 	}
 	
-	public ArrayList<Vec2> getMoves(int x, int y, boolean checkingCheck) {
-		ArrayList<Vec2> moves = new ArrayList<>();
+	public List<Vec2> getMoves(int x, int y, boolean checkingCheck) {
+		List<Vec2> moves = new ArrayList<>();
 		Color col = getColor(x, y);
 		switch (board[y][x]) {
 		case '♛':
@@ -281,7 +293,7 @@ public class Board {
 		}
 		
 		if (!checkingCheck) {
-			ArrayList<Vec2> realMoves = new ArrayList<>();
+			List<Vec2> realMoves = new ArrayList<>();
 			
 			for (Vec2 move : moves) {
 				Board testBoard = new Board(this);
@@ -350,6 +362,11 @@ public class Board {
 		
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
+		if (getPiece(to) == '♙' && to.getY() == 0) {
+			board[to.getY()][to.getX()] = '♕';
+		} else if (getPiece(to) == '♟' && to.getY() == 7) {
+			board[to.getY()][to.getX()] = '♛';
+		}
 		history.add(from + " to " + to);
 	}
 	

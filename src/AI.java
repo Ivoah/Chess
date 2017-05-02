@@ -12,12 +12,12 @@ public class AI {
 		this.rand = new Random();
 	}
 	
-	private ArrayList<Board> successors(Board state, Board.Color color) {
-		ArrayList<Board> states = new ArrayList<>();
+	private List<Board> successors(Board state, Board.Color col) {
+		List<Board> states = new ArrayList<>();
 		
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				if (state.getColor(j, i) == color) {
+				if (state.getColor(j, i) == col) {
 					for (Vec2 move : state.getMoves(j, i)) {
 						Board newState = new Board(state);
 						newState.move(new Vec2(j, i), move);
@@ -35,13 +35,16 @@ public class AI {
 	
 	public Board makeMove(Board board) {
 		int v = Integer.MIN_VALUE;
-		ArrayList<Board> maxStates = new ArrayList<>();
+		List<Board> maxStates = new ArrayList<>();
 		for (Board state : successors(board, this.color)) {
 			int m = max(state, this.difficulty);
+			//System.out.println(m);
 			if (v == m) {
 				maxStates.add(state);
 			} else if (v < m) {
+				v = m;
 				maxStates.clear();
+				maxStates.add(state);
 			}
 		}
 		

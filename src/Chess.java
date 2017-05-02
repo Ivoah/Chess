@@ -44,6 +44,7 @@ public class Chess implements ActionListener {
 		JMenu menu = new JMenu("File");
 		int cmd = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		
+		/*
 		JMenuItem open = new JMenuItem("Open...");
 		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, cmd));
 		open.addActionListener(this);
@@ -55,6 +56,7 @@ public class Chess implements ActionListener {
 		menu.add(save);
 
 		menu.add(new JSeparator());
+		*/
 		
 		JMenuItem new_game = new JMenuItem("New Game");
 		new_game.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, cmd));
@@ -157,8 +159,7 @@ public class Chess implements ActionListener {
 				}
 			} else {
 				if (!selected.equals(p)) {
-					//if (currentPlayer == Board.Color.White) currentPlayer = Board.Color.Black;
-					//else currentPlayer = Board.Color.White;
+					//currentPlayer = Board.otherColor(currentPlayer);
 					System.out.println(selected + " to " + p);
 					board.move(selected, p);
 					updateBoard();
