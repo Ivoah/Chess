@@ -28,7 +28,6 @@ public class Board {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = start[i][j];
-				//prev[i][j] = board[i][j];
 			}
 		}
 	}
@@ -42,7 +41,6 @@ public class Board {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board[i][j] = init.board[i][j];
-				//prev[i][j] = board[i][j];
 			}
 		}
 		history = new ArrayList<>(init.history);
@@ -206,38 +204,50 @@ public class Board {
 		case '♚':
 		case '♔':
 			if (getColor(x, y) == Color.Black) {
-				if (!blackCastle[0] && !blackCastle[1]) {
-					if (getColor(1,0) == Color.EMPTY && getColor(2,0) == Color.EMPTY && getColor(3,0) == Color.EMPTY){
-						Board testBoard = new Board(this);
-						testBoard.move(new Vec2(x, y), new Vec2(2, 0));
-						if (!testBoard.checkCheck(col))
-							moves.add(new Vec2(2, 0));
-					}	
+				if (!blackCastle[1]) {
+					if (!blackCastle[0]) {
+						boolean free = true;
+						for (int i = 2; i <= 3; i++) {
+							Board testBoard = new Board(this);
+							testBoard.move(new Vec2(x, y), new Vec2(i, 0));
+							if (getColor(i, 0) != Color.EMPTY || testBoard.checkCheck(col))
+								free = false;
+						}
+						if (free) moves.add(new Vec2(2, 0));
+					}
+					if (!blackCastle[2]) {
+						boolean free = true;
+						for (int i = 5; i <= 6; i++) {
+							Board testBoard = new Board(this);
+							testBoard.move(new Vec2(x, y), new Vec2(i, 0));
+							if (getColor(i, 0) != Color.EMPTY || testBoard.checkCheck(col))
+								free = false;
+						}
+						if (free) moves.add(new Vec2(6, 0));
+					}
 				}
-				if (!blackCastle[1] && !blackCastle[2]){
-					if (getColor(6,0) == Color.EMPTY && getColor(7,0) == Color.EMPTY){
-						Board testBoard = new Board(this);
-						testBoard.move(new Vec2(x, y), new Vec2(6, 0));
-						if (!testBoard.checkCheck(col))
-							moves.add(new Vec2(6,0));
-					}	
-				}
-			} else if (getColor(x, y) == Color.White) {
-				if (!whiteCastle[0] && !whiteCastle[1]) {
-					if (getColor(1,7) == Color.EMPTY && getColor(2,7) == Color.EMPTY && getColor(3,7) == Color.EMPTY){
-						Board testBoard = new Board(this);
-						testBoard.move(new Vec2(x, y), new Vec2(2, 7));
-						if (!testBoard.checkCheck(col))
-							moves.add(new Vec2(2, 7));
-					}	
-				}
-				if (!whiteCastle[1] && !whiteCastle[2]){
-					if (getColor(6,7) == Color.EMPTY && getColor(5,7) == Color.EMPTY){
-						Board testBoard = new Board(this);
-						testBoard.move(new Vec2(x ,y), new Vec2(6, 7));
-						if (!testBoard.checkCheck(col))
-							moves.add(new Vec2(6, 7));
-					}	
+			} if (getColor(x, y) == Color.White) {
+				if (!whiteCastle[1]) {
+					if (!whiteCastle[0]) {
+						boolean free = true;
+						for (int i = 2; i <= 3; i++) {
+							Board testBoard = new Board(this);
+							testBoard.move(new Vec2(x, y), new Vec2(i, 7));
+							if (getColor(i, 7) != Color.EMPTY || testBoard.checkCheck(col))
+								free = false;
+						}
+						if (free) moves.add(new Vec2(2, 7));
+					}
+					if (!whiteCastle[2]) {
+						boolean free = true;
+						for (int i = 5; i <= 6; i++) {
+							Board testBoard = new Board(this);
+							testBoard.move(new Vec2(x, y), new Vec2(i, 7));
+							if (getColor(i, 7) != Color.EMPTY || testBoard.checkCheck(col))
+								free = false;
+						}
+						if (free) moves.add(new Vec2(6, 7));
+					}
 				}
 			}
 			for (int[] move : new int[][]{{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}) {
@@ -323,64 +333,28 @@ public class Board {
 	 * @param to
 	 */
 	public void move(Vec2 from, Vec2 to) {
-		if (from.getX() == 4 && from.getY() == 0){
-			blackCastle[1] = true;
-		}
-		if (from.getX() == 0 && from.getY() == 0){
-			blackCastle[0] = true;
-		}
-		if (from.getX() == 7 && from.getY() == 0){
-			blackCastle[2] = true;
+		if (from.equals(0, 0)) blackCastle[0] = true;
+		if (from.equals(4, 0)) blackCastle[1] = true;
+		if (from.equals(7, 0)) blackCastle[2] = true;
+		if (from.equals(0, 7)) whiteCastle[0] = true;
+		if (from.equals(4, 7)) whiteCastle[1] = true;
+		if (from.equals(7, 7)) whiteCastle[2] = true;
+		
+		if (getPiece(from) == '♚' && from.equals(4, 0)) {
+			if (to.equals(2, 0)) move(0, 0, 3, 0);
+			else if (to.equals(6, 0)) move(7, 0, 5, 0);
+		} else if (getPiece(from) == '♔' && from.equals(4, 7)) {
+			if (to.equals(2, 7)) move(0, 7, 3, 7);
+			else if (to.equals(6, 7)) move(7, 7, 5, 7);
 		}
 		
-		if (from.getX() == 4 && from.getY() == 7){
-			whiteCastle[1] = true;
-		}
-		if (from.getX() == 0 && from.getY() == 7){
-			whiteCastle[0] = true;
-		}
-		if (from.getX() == 7 && from.getY() == 7){
-			whiteCastle[2] = true;
-		}
-		if (from.getX() == 4 && from.getY() == 0){
-			blackCastle[1] = true;
-		}
-		if (from.getX() == 0 && from.getY() == 0){
-			blackCastle[0] = true;
-		}
-		if (from.getX() == 7 && from.getY() == 0){
-			blackCastle[2] = true;
-		}
-		
-		if (from.getX() == 4 && from.getY() == 7){
-			whiteCastle[1] = true;
-		}
-		if (from.getX() == 0 && from.getY() == 7){
-			whiteCastle[0] = true;
-		}
-		if (from.getX() == 7 && from.getY() == 7){
-			whiteCastle[2] = true;
-		}
-		
-		if (board[0][4] == '♔'){
-			if (from.getX() == 4 && from.getY() == 0 && to.getX() == 2 && from.getY() == 0){
-				move(new Vec2(0,0), new Vec2(0,3));
-			}
-			if (from.getX() == 4 && from.getY() == 0 && to.getX() == 6 && from.getY() == 0){
-				move(new Vec2(7,0), new Vec2(0,5));
-			}
-		}
-		if (board[0][4] == '♚'){
-			if (from.getX() == 4 && from.getY() == 7 && to.getX() == 2 && from.getY() == 7){
-				move(new Vec2(7,0), new Vec2(3,7));
-			}
-			if (from.getX() == 4 && from.getY() == 7 && to.getX() == 6 && from.getY() == 7){
-				move(new Vec2(7,7), new Vec2(5,7));
-			}
-		}
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
 		board[from.getY()][from.getX()] = ' ';
 		history.add(from + " to " + to);
+	}
+	
+	public void move(int x1, int y1, int x2, int y2) {
+		move(new Vec2(x1, y1), new Vec2(x2, y2));
 	}
 	
 	public void move(String move) {
