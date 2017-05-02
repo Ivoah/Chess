@@ -20,6 +20,7 @@ public class Chess implements ActionListener {
 	private Vec2 selected;
 	private JFrame frame;
 	private JPanel panel;
+	private JProgressBar progress;
 	
 	private Board board = null;
 	
@@ -44,6 +45,9 @@ public class Chess implements ActionListener {
 		frame.setResizable(false);
 		frame.setTitle("Chess");
 
+		progress = new JProgressBar();
+		progress.setIndeterminate(true);
+		
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("File");
 		int cmd = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
@@ -68,6 +72,34 @@ public class Chess implements ActionListener {
 		menubar.add(menu);
 		frame.setJMenuBar(menubar);
 		
+		panel = new JPanel(new GridLayout(8, 8));
+		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				JButton btn = new JButton();
+				btn.setActionCommand(j + "" + i);
+				btn.setFont(new Font("", Font.PLAIN, 42));
+				btn.addActionListener(this);
+				btn.setFocusable(false);
+				panel.add(btn);
+			}
+		}
+
+		frame.add(panel, BorderLayout.CENTER);
+		
+		JPanel letters = new JPanel(new GridLayout(1, 8));
+		JPanel numbers = new JPanel(new GridLayout(8, 1));
+		
+		for (int i = 0; i < 8; i++) {
+			letters.add(new JLabel(Character.toString((char)('a' + i)), SwingConstants.CENTER));
+			numbers.add(new JLabel(Integer.toString(8 - i), SwingConstants.CENTER));
+		}
+		
+		frame.add(letters, BorderLayout.SOUTH);
+		//frame.add(letters, BorderLayout.NORTH);
+		frame.add(numbers, BorderLayout.WEST);
+		//frame.add(numbers, BorderLayout.EAST);
+		frame.pack();
 		newGame();
 		
 		frame.setLocationRelativeTo(null);
@@ -99,37 +131,7 @@ public class Chess implements ActionListener {
 		selected = null;
 		board = new Board();
 		
-		frame.getContentPane().removeAll();
-		panel = new JPanel(new GridLayout(8, 8));
-		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				JButton btn = new JButton(board.getPiece(j, i).toString());
-				btn.setActionCommand(j + "" + i);
-				btn.setFont(new Font("", Font.PLAIN, 42));
-				btn.addActionListener(this);
-				btn.setFocusable(false);
-				if (board.getColor(j, i) == currentPlayer && board.getMoves(j, i).size() > 0) btn.setEnabled(true);
-				else btn.setEnabled(false);
-				panel.add(btn);
-			}
-		}
-
-		frame.add(panel, BorderLayout.CENTER);
-		
-		JPanel letters = new JPanel(new GridLayout(1, 8));
-		JPanel numbers = new JPanel(new GridLayout(8, 1));
-		
-		for (int i = 0; i < 8; i++) {
-			letters.add(new JLabel(Character.toString((char)('a' + i)), SwingConstants.CENTER));
-			numbers.add(new JLabel(Integer.toString(8 - i), SwingConstants.CENTER));
-		}
-		
-		frame.add(letters, BorderLayout.SOUTH);
-		//frame.add(letters, BorderLayout.NORTH);
-		frame.add(numbers, BorderLayout.WEST);
-		//frame.add(numbers, BorderLayout.EAST);
-		frame.pack();
+		updateBoard();
 	}
 
 	/**
