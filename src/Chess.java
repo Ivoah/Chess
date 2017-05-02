@@ -20,7 +20,6 @@ public class Chess implements ActionListener {
 	private Vec2 selected;
 	private JFrame frame;
 	private JPanel panel;
-	private JProgressBar progress;
 	
 	private Board board = null;
 	
@@ -44,9 +43,6 @@ public class Chess implements ActionListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.setTitle("Chess");
-
-		progress = new JProgressBar();
-		progress.setIndeterminate(true);
 		
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("File");
@@ -96,10 +92,10 @@ public class Chess implements ActionListener {
 		}
 		
 		frame.add(letters, BorderLayout.SOUTH);
-		//frame.add(letters, BorderLayout.NORTH);
 		frame.add(numbers, BorderLayout.WEST);
-		//frame.add(numbers, BorderLayout.EAST);
+		
 		frame.pack();
+		
 		newGame();
 		
 		frame.setLocationRelativeTo(null);
@@ -152,7 +148,7 @@ public class Chess implements ActionListener {
 					updateBoard();
 					moves.close();
 				} catch (FileNotFoundException e1) {
-					// Won't happen
+					JOptionPane.showMessageDialog(frame, f.getName() + " does not exist", "File not found", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		} else if (e.getActionCommand() == "Save...") {
@@ -165,7 +161,7 @@ public class Chess implements ActionListener {
 					}
 					pw.close();
 				} catch (FileNotFoundException e1) {
-					// Won't happen
+					JOptionPane.showMessageDialog(frame, f.getName() + " does not exist", "File not found", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		} else {
@@ -183,10 +179,6 @@ public class Chess implements ActionListener {
 					btn.setEnabled(true);
 					for (Vec2 move : board.getMoves(p)) {
 						getButton(move).setEnabled(true);
-						/* JOptionPane.showOptionDialog(frame, "What do you want to promote your pawn to?",
-									"Promotion", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-									new String[] { "Queen", "Bishop", "Knight", "Rook" }, "Queen");
-						*/
 					}
 				}
 			} else {
