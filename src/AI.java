@@ -38,7 +38,6 @@ public class AI {
 		List<Board> maxStates = new ArrayList<>();
 		for (Board state : successors(board, this.color)) {
 			int m = min(state, this.difficulty);
-			//System.out.println(m);
 			if (v == m) {
 				maxStates.add(state);
 			} else if (v < m) {
@@ -48,9 +47,7 @@ public class AI {
 			}
 		}
 		
-		Board state = maxStates.get(this.rand.nextInt(maxStates.size()));
-		System.out.println(state.history.get(state.history.size() - 1));
-		return state;
+		return maxStates.get(this.rand.nextInt(maxStates.size()));
 	}
 	
 	/**

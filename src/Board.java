@@ -102,19 +102,7 @@ public class Board {
 							for (int[] move : new int[][]{{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}) {
 								int nx = j + move[0];
 								int ny = i + move[1];
-								try {
-									if (king.equals(nx, ny)) return true;
-								} catch (NullPointerException e) {
-									Board b = new Board();
-									System.out.print(b);
-									System.out.println("----------------");
-									for (String s : history) {
-										b.move(s);
-										System.out.print(b);
-										System.out.println("----------------");
-									}
-									throw e;
-								}
+								if (king.equals(nx, ny)) return true;
 							}
 						}
 					} else {
@@ -353,11 +341,11 @@ public class Board {
 		if (from.equals(7, 7)) whiteCastle[2] = true;
 		
 		if (getPiece(from) == '♚' && from.equals(4, 0)) {
-			if (to.equals(2, 0)) move(0, 0, 3, 0);
-			else if (to.equals(6, 0)) move(7, 0, 5, 0);
+			if (to.equals(2, 0)) castle(0, 0, 3, 0);
+			else if (to.equals(6, 0)) castle(7, 0, 5, 0);
 		} else if (getPiece(from) == '♔' && from.equals(4, 7)) {
-			if (to.equals(2, 7)) move(0, 7, 3, 7);
-			else if (to.equals(6, 7)) move(7, 7, 5, 7);
+			if (to.equals(2, 7)) castle(0, 7, 3, 7);
+			else if (to.equals(6, 7)) castle(7, 7, 5, 7);
 		}
 		
 		board[to.getY()][to.getX()] = board[from.getY()][from.getX()];
@@ -370,8 +358,9 @@ public class Board {
 		history.add(from + " to " + to);
 	}
 	
-	public void move(int x1, int y1, int x2, int y2) {
+	public void castle(int x1, int y1, int x2, int y2) {
 		move(new Vec2(x1, y1), new Vec2(x2, y2));
+		history.remove(history.size() - 1);
 	}
 	
 	public void move(String move) {
@@ -417,10 +406,6 @@ public class Board {
 		}
 		
 		return total;
-	}
-	
-	public List<String> getHistory() {
-		return history;
 	}
 	
 	public String toString() {

@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * Main Chess class
@@ -23,6 +25,8 @@ public class Chess implements ActionListener {
 	
 	private Board.Color currentPlayer;
 	private AI ai;
+	
+	final JFileChooser fc = new JFileChooser();
 
 	/**
 	 * Chess constructor
@@ -44,7 +48,6 @@ public class Chess implements ActionListener {
 		JMenu menu = new JMenu("File");
 		int cmd = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		
-		/*
 		JMenuItem open = new JMenuItem("Open...");
 		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, cmd));
 		open.addActionListener(this);
@@ -56,7 +59,6 @@ public class Chess implements ActionListener {
 		menu.add(save);
 
 		menu.add(new JSeparator());
-		*/
 		
 		JMenuItem new_game = new JMenuItem("New Game");
 		new_game.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, cmd));
@@ -136,6 +138,34 @@ public class Chess implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "New Game") {
 			newGame();
+		} else if (e.getActionCommand() == "Open...") {
+			if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+				File f = fc.getSelectedFile();
+				try {
+					Scanner moves = new Scanner(f);
+					board = new Board();
+					while (moves.hasNextLine()) {
+						board.move(moves.nextLine());
+					}
+					updateBoard();
+					moves.close();
+				} catch (FileNotFoundException e1) {
+					// Won't happen
+				}
+			}
+		} else if (e.getActionCommand() == "Save...") {
+			if (fc.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+				File f = fc.getSelectedFile();
+				try {
+					PrintWriter pw = new PrintWriter(f);
+					for (String move : board.history) {
+						pw.println(move);
+					}
+					pw.close();
+				} catch (FileNotFoundException e1) {
+					// Won't happen
+				}
+			}
 		} else {
 			JButton btn = (JButton) e.getSource();
 			int x = btn.getActionCommand().charAt(0) - '0';
@@ -160,7 +190,6 @@ public class Chess implements ActionListener {
 			} else {
 				if (!selected.equals(p)) {
 					//currentPlayer = Board.otherColor(currentPlayer);
-					System.out.println(selected + " to " + p);
 					board.move(selected, p);
 					updateBoard();
 					if (board.checkDraw(Board.otherColor(currentPlayer))) {
